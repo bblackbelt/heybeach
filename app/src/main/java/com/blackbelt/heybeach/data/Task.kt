@@ -5,18 +5,22 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.Charset
+import java.util.concurrent.Callable
 
-class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<String>) : Runnable {
+interface ITask<T> : Callable<T> {}
+
+class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<String>) : ITask<String> {
 
     private val mTaskDescriptor = taskDescriptor
 
     private val mTaskListener: TaskListener<String>? = listener
 
-    override fun run() {
+    override fun call(): String {
+        var jsonString = ""
         var urlConnection: HttpURLConnection? = null
         try {
             urlConnection = URL(mTaskDescriptor.url).openConnection() as HttpURLConnection;
-            urlConnection.setRequestProperty("Accept", "application/json");
+            urlConnection.setRequestProperty("Accept", "application/json")
             urlConnection.requestMethod = mTaskDescriptor.requestMethod.name
 
             if (mTaskDescriptor.requestMethod == RequestMethod.POST) {
@@ -24,7 +28,7 @@ class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<St
             }
 
             if (urlConnection.responseCode == 200) {
-                val jsonString = urlConnection.inputStream.readTextAndClose()
+                jsonString = urlConnection.inputStream.readTextAndClose()
                 mTaskListener?.onTaskCompleted(jsonString)
             } else {
                 mTaskListener?.onTaskFailed(urlConnection.errorStream.readTextAndClose(), null)
@@ -34,10 +38,11 @@ class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<St
         } finally {
             urlConnection?.disconnect()
         }
+        return jsonString
     }
 }
 
-fun HttpURLConnection.body(body : String?) {
+fun HttpURLConnection.body(body: String?) {
     body ?: return
     outputStream.bufferedWriter().use { it.write(body) }
 }
