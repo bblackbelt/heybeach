@@ -1,7 +1,8 @@
-package com.blackbelt.heybeach
+package com.blackbelt.heybeach.view
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.blackbelt.heybeach.R
 
 class MainActivity : AppCompatActivity() {
 

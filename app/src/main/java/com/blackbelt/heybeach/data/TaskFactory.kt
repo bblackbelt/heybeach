@@ -2,12 +2,13 @@ package com.blackbelt.heybeach.data
 
 import android.net.Uri
 
+
+const val BASE_URL = "http://techtest.lab1886.io:3000"
+
 object TaskFactory {
 
-    private const val mBaseUrl = "http://techtest.lab1886.io:3000"
-
     fun createBeachTask(page: Int = 1, listener: TaskListener<String>): Task {
-        val url = mBaseUrl.generateUrl(listOf("beaches"), mapOf("page" to page.toString()))
+        val url = BASE_URL.generateUrl(listOf("beaches"), mapOf("page" to page.toString()))
         val taskDescriptor = TaskDescriptor(url)
         return Task(taskDescriptor, listener)
     }
