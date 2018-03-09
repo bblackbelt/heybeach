@@ -13,9 +13,9 @@ interface IBeachesManager {
 
 class BeachesManager constructor(executor: RequestExecutor, parsingFactory: ParsingFactory) : IBeachesManager {
 
-    val mRequestExecutor = executor
+    private val mRequestExecutor = executor
 
-    val mParsingFactory = parsingFactory
+    private val mParsingFactory = parsingFactory
 
     override fun loadBeaches(page: Int, onDataLoadedListener: OnDataLoadedListener<List<Beach>>?) {
         val task = TaskFactory.createBeachTask(page, object : TaskListener<String> {
