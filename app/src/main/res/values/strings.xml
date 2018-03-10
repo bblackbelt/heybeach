@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Heybeach</string>
+    <string name="register">Create account</string>
+    <string name="login">Login</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="choose_username">Email</string>
+    <string name="enter_your_password">Password</string>
+    <string name="signup_for_free">Sign up for free</string>
 </resources>

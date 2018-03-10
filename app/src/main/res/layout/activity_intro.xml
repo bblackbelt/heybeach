@@ -9,7 +9,7 @@
     </data>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -19,11 +19,44 @@
         <com.blackbelt.heybeach.widgets.BindableRecyclerView
                 android:layout_width="match_parent"
                 android:id="@+id/rv"
+                android:layout_above="@+id/register_account_container"
                 items="@{introViewModel.beaches}"
                 itemViewBinder="@{introViewModel.templates}"
-                android:layout_height="wrap_content"
-                android:text="Hello World!" />
+                android:layout_height="wrap_content" />
 
-    </LinearLayout>
+        <LinearLayout
+                android:gravity="center"
+                android:id="@id/register_account_container"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="@dimen/margin_16"
+                android:layout_marginStart="@dimen/margin_16">
+
+            <Button
+                    android:id="@+id/login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_16" />
+
+
+            <TextView
+                    android:id="@+id/createAccountButton"
+                    android:text="@string/register"
+                    android:paddingTop="@dimen/margin_16"
+                    android:paddingBottom="@dimen/margin_16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_16"
+                    android:textColor="@color/colorPrimary"
+                    android:gravity="center" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </layout>
