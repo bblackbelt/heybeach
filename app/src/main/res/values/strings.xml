@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Heybeach</string>
+    <string name="register">Create account</string>
+    <string name="login">Login</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="choose_username">Email</string>
+    <string name="enter_your_password">Password</string>
+    <string name="signup_for_free">Sign up for free</string>
+    <string name="oops_something_went_wrong">Oops something went wrong</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="invalid_password">Password must be at least six chars</string>
+    <string name="log_out">Log out</string>
 </resources>

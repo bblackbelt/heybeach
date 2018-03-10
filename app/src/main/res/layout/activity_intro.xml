@@ -9,21 +9,57 @@
     </data>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="com.blackbelt.heybeach.view.MainActivity">
+            tools:context="com.blackbelt.heybeach.view.main.MainActivity">
 
         <com.blackbelt.heybeach.widgets.BindableRecyclerView
                 android:layout_width="match_parent"
                 android:id="@+id/rv"
+                android:layout_above="@+id/register_account_container"
                 items="@{introViewModel.beaches}"
                 itemViewBinder="@{introViewModel.templates}"
-                android:layout_height="wrap_content"
-                android:text="Hello World!" />
+                android:layout_height="wrap_content" />
 
-    </LinearLayout>
+        <LinearLayout
+                android:gravity="center"
+                android:id="@id/register_account_container"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="@dimen/margin_16"
+                android:layout_marginEnd="@dimen/margin_16"
+                android:layout_marginStart="@dimen/margin_16">
+
+            <TextView
+                    android:padding="@dimen/margin_16"
+                    android:id="@+id/login"
+                    android:text="@string/login"
+                    android:background="@drawable/button_intro_login_signup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_16"
+                    android:textColor="@android:color/white"
+                    android:gravity="center_horizontal" />
+
+
+            <TextView
+                    android:id="@+id/createAccountButton"
+                    android:text="@string/register"
+                    android:paddingTop="@dimen/margin_16"
+                    android:paddingBottom="@dimen/margin_16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_16"
+                    android:textColor="@color/colorPrimary"
+                    android:gravity="center" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </layout>

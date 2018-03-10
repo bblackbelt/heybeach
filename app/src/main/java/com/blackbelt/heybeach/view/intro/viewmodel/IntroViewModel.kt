@@ -6,6 +6,7 @@ import com.blackbelt.heybeach.R
 import com.blackbelt.heybeach.domain.OnDataLoadedListener
 import com.blackbelt.heybeach.domain.beaches.IBeachesManager
 import com.blackbelt.heybeach.domain.beaches.model.Beach
+import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
 import com.blackbelt.heybeach.view.misc.viewmodel.ProgressLoader
 import com.blackbelt.heybeach.widgets.AndroidItemBinder
@@ -32,7 +33,7 @@ class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel() {
                 }
             }
 
-            override fun onError(message: String?, throwable: Throwable?) {
+            override fun onError(message: ErrorModel?, throwable: Throwable?) {
             }
         })
     }

@@ -1,21 +1,22 @@
 package com.blackbelt.heybeach.domain.beaches
 
-import com.blackbelt.heybeach.data.ParsingFactory
 import com.blackbelt.heybeach.data.RequestExecutor
+import com.blackbelt.heybeach.data.ResponseParser
 import com.blackbelt.heybeach.data.TaskFactory
 import com.blackbelt.heybeach.data.TaskListener
 import com.blackbelt.heybeach.domain.OnDataLoadedListener
 import com.blackbelt.heybeach.domain.beaches.model.Beach
+import com.blackbelt.heybeach.domain.model.ErrorModel
 
 interface IBeachesManager {
     fun loadBeaches(page: Int = 1, onDataLoadedListener: OnDataLoadedListener<List<Beach>>?)
 }
 
-class BeachesManager constructor(executor: RequestExecutor, parsingFactory: ParsingFactory) : IBeachesManager {
+class BeachesManager constructor(executor: RequestExecutor, parsingParser: ResponseParser) : IBeachesManager {
 
     private val mRequestExecutor = executor
 
-    private val mParsingFactory = parsingFactory
+    private val mParsingFactory = parsingParser
 
     override fun loadBeaches(page: Int, onDataLoadedListener: OnDataLoadedListener<List<Beach>>?) {
         val task = TaskFactory.createBeachTask(page, object : TaskListener<String> {
@@ -29,7 +30,8 @@ class BeachesManager constructor(executor: RequestExecutor, parsingFactory: Pars
             }
 
             override fun onTaskFailed(message: String?, throwable: Throwable?) {
-                onDataLoadedListener?.onError(message, throwable)
+                val errorResponse = mParsingFactory.toErrorResponseModel(message)
+                onDataLoadedListener?.onError(ErrorModel(errorResponse.code, errorResponse.errmsg), throwable)
             }
         })
         mRequestExecutor.executeTask(task)

@@ -1,14 +1,18 @@
 package com.blackbelt.heybeach.view
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.util.LruCache
-import com.blackbelt.heybeach.data.ParsingFactory
 import com.blackbelt.heybeach.data.RequestExecutor
+import com.blackbelt.heybeach.data.ResponseParser
 import com.blackbelt.heybeach.domain.beaches.BeachesManager
 import com.blackbelt.heybeach.domain.beaches.IBeachesManager
 import com.blackbelt.heybeach.domain.pictures.IPictureManager
 import com.blackbelt.heybeach.domain.pictures.PictureManager
+import com.blackbelt.heybeach.domain.user.IUserManager
+import com.blackbelt.heybeach.domain.user.UserManager
 import java.io.File
 
 class HeyBeachApp : Application() {
@@ -20,7 +24,15 @@ class HeyBeachApp : Application() {
     }
 
     private val mBeachesManager: IBeachesManager by lazy {
-        BeachesManager(RequestExecutor.getInstance(), ParsingFactory)
+        BeachesManager(RequestExecutor.getInstance(), ResponseParser)
+    }
+
+    private val mUserManager: IUserManager by lazy {
+        UserManager(RequestExecutor.getInstance(), ResponseParser, mSharedPreferences)
+    }
+
+    private val mSharedPreferences: SharedPreferences by lazy {
+        getSharedPreferences("HEY_BEACH_SP", Context.MODE_PRIVATE)
     }
 
     private val mPictureCache: LruCache<String, Bitmap> by lazy {
@@ -45,4 +57,6 @@ class HeyBeachApp : Application() {
     fun getBeachesManager() = mBeachesManager
 
     fun getPictureManager() = mPictureManager
+
+    fun getUserManager() = mUserManager
 }

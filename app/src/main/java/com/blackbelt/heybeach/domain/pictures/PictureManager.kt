@@ -7,6 +7,7 @@ import android.util.LruCache
 import android.widget.ImageView
 import com.blackbelt.heybeach.data.TaskFactory
 import com.blackbelt.heybeach.domain.OnDataLoadedListener
+import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.view.HeyBeachApp
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -88,7 +89,7 @@ fun ImageView.loadInto(imagePath: String) {
                     setImageBitmap(data)
                 }
 
-                override fun onError(message: String?, throwable: Throwable?) {
+                override fun onError(message: ErrorModel?, throwable: Throwable?) {
                 }
             })
 }
