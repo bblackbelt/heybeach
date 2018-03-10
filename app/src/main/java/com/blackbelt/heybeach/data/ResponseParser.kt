@@ -3,6 +3,7 @@ package com.blackbelt.heybeach.data
 import com.blackbelt.heybeach.data.model.BeachResponse
 import com.blackbelt.heybeach.data.model.ErrorResponse
 import com.blackbelt.heybeach.data.model.SignUpResponseModel
+import com.blackbelt.heybeach.data.model.UserResponseModel
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -37,7 +38,20 @@ object ResponseParser {
         return SignUpResponseModel()
     }
 
-    fun toErrorResponseModel(jsonString: String?) : ErrorResponse {
+    fun toUserResponseMode(jsonString: String?): UserResponseModel {
+        try {
+            val obj = JSONObject(jsonString)
+            val email = obj.optString("email")
+            val id = obj.optString("_id")
+            return UserResponseModel(id, email)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return UserResponseModel()
+    }
+
+    fun toErrorResponseModel(jsonString: String?): ErrorResponse {
         try {
             val obj = JSONObject(jsonString)
             val code = obj.optInt("code")

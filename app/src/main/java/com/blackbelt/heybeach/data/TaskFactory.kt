@@ -39,6 +39,11 @@ object TaskFactory {
         return Task(taskDescriptor, listener, authToken)
     }
 
+    fun createUserTask(listener: TaskListener<String>, authToken: String): ITask<String> {
+        val url = BASE_URL.generateUrl(listOf("user", "me"))
+        val taskDescriptor = TaskDescriptor(url, RequestMethod.GET)
+        return Task(taskDescriptor, listener, authToken)
+    }
 }
 
 fun String.generateUrl(pathSegments: List<String> = listOf(), query: Map<String, String> = mapOf()): String {

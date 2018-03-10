@@ -8,6 +8,7 @@ import com.blackbelt.heybeach.domain.beaches.IBeachesManager
 import com.blackbelt.heybeach.domain.beaches.model.Beach
 import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.domain.user.IUserManager
+import com.blackbelt.heybeach.domain.user.model.UserModel
 import com.blackbelt.heybeach.view.intro.viewmodel.BeachItemViewModel
 import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
 import com.blackbelt.heybeach.view.misc.viewmodel.ProgressLoader
@@ -32,6 +33,13 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
             notifyPropertyChanged(BR.firstLoading)
         }
 
+    var mUser: UserModel? = null
+        @Bindable get
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.userEmail)
+        }
+
     private var mError = false
 
     private var mPageDescriptor = PageDescriptor.PageDescriptorBuilder
@@ -45,6 +53,22 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
     val templates: Map<Class<*>, AndroidItemBinder> =
             hashMapOf(ProgressLoader::class.java to AndroidItemBinder(R.layout.loading_progress, BR.progressLoader),
                     BeachItemViewModel::class.java to AndroidItemBinder(R.layout.beach_item, BR.beach))
+
+    override fun onCreate() {
+        super.onCreate()
+        mUserManager.getUser(object : OnDataLoadedListener<UserModel> {
+            override fun onDataLoaded(data: UserModel) {
+                mUser = data
+            }
+
+            override fun onError(message: ErrorModel?, throwable: Throwable?) {
+                mListener?.onError(message, throwable)
+            }
+        })
+    }
+
+    @Bindable
+    fun getUserEmail() = mUser?.email
 
     @Bindable
     fun getNextPage() = mPageDescriptor
