@@ -7,8 +7,8 @@ import com.blackbelt.heybeach.BR
 import com.blackbelt.heybeach.R
 import com.blackbelt.heybeach.domain.beaches.IBeachesManager
 import com.blackbelt.heybeach.view.HeyBeachApp
-import com.blackbelt.heybeach.view.MainActivity
 import com.blackbelt.heybeach.view.intro.viewmodel.IntroViewModel
+import com.blackbelt.heybeach.view.main.MainActivity
 import com.blackbelt.heybeach.view.misc.BaseActivity
 import com.blackbelt.heybeach.view.user.SignUpActivity
 import kotlinx.android.synthetic.main.activity_intro.*

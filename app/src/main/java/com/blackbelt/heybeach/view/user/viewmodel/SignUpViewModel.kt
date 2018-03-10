@@ -8,7 +8,6 @@ import com.blackbelt.heybeach.domain.OnDataLoadedListener
 import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.domain.user.IUserManager
 import com.blackbelt.heybeach.domain.user.model.SignUpModel
-import com.blackbelt.heybeach.view.View
 import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
 
 class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel(), OnDataLoadedListener<SignUpModel> {
@@ -21,8 +20,6 @@ class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel(), 
             field = value
             notifyPropertyChanged(BR.loading)
         }
-
-    var mListener: View<SignUpModel>? = null
 
     var email: String = ""
 

@@ -16,9 +16,9 @@ interface IUserManager {
 
     fun signIn(email: String, password: String, listener: OnDataLoadedListener<SignUpModel>?)
 
-    fun logout(listener: OnDataLoadedListener<Boolean>?)
+    fun logout(listener: OnDataLoadedListener<Boolean>? = null)
 
-    fun getAuthToken() : String
+    fun getAuthToken(): String
 }
 
 private const val X_AUTH_TOKEN_KEY = "X_AUTH_TOKEN_KEY"
@@ -39,9 +39,9 @@ class UserManager constructor(executor: RequestExecutor, parsingFactory: Respons
                 listener?.onDataLoaded(SignUpModel(responseModel.id, responseModel.email))
             }
 
-            override fun onTaskFailed(message: String?, throwable: Throwable?) {
+            override fun onTaskFailed(message: String?, throwable: Throwable?, errorCode: Int) {
                 val errorResponse = mParsingFactory.toErrorResponseModel(message)
-                listener?.onError(ErrorModel(errorResponse.code, errorResponse.errmsg), throwable)
+                listener?.onError(ErrorModel(errorResponse.code ?: errorCode, errorResponse.errmsg), throwable)
             }
         }))
     }
@@ -64,24 +64,24 @@ class UserManager constructor(executor: RequestExecutor, parsingFactory: Respons
                 listener?.onDataLoaded(SignUpModel(responseModel.id, responseModel.email))
             }
 
-            override fun onTaskFailed(message: String?, throwable: Throwable?) {
+            override fun onTaskFailed(message: String?, throwable: Throwable?, errorCode: Int) {
                 val errorResponse = mParsingFactory.toErrorResponseModel(message)
-                listener?.onError(ErrorModel(errorResponse.code, errorResponse.errmsg), throwable)
+                listener?.onError(ErrorModel(errorResponse.code ?: errorCode, errorResponse.errmsg), throwable)
             }
         }))
     }
 
     override fun logout(listener: OnDataLoadedListener<Boolean>?) {
         val token = mSharedPreferences.getString(X_AUTH_TOKEN_KEY, "")
+        saveAuthToken(null)
         mRequestExecutor.executeTask(TaskFactory.createLogoutTask(object : TaskListener<String> {
             override fun onTaskCompleted(result: String) {
-                saveAuthToken(null)
                 listener?.onDataLoaded(true)
             }
 
-            override fun onTaskFailed(message: String?, throwable: Throwable?) {
+            override fun onTaskFailed(message: String?, throwable: Throwable?, errorCode: Int) {
                 val errorResponse = mParsingFactory.toErrorResponseModel(message)
-                listener?.onError(ErrorModel(errorResponse.code, errorResponse.errmsg), throwable)
+                listener?.onError(ErrorModel(errorResponse.code ?: errorCode, errorResponse.errmsg), throwable)
             }
         }, token))
     }

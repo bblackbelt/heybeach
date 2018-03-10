@@ -1,5 +1,6 @@
 package com.blackbelt.heybeach.data
 
+import android.util.Log
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -40,7 +41,8 @@ class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<St
                 urlConnection.body(mTaskDescriptor.body)
             }
 
-            if (urlConnection.responseCode == 200) {
+            val responseCode = urlConnection.responseCode
+            if (responseCode == 200) {
 
                 val token: String? = urlConnection.getHeaderField(X_AUTH_HEADER)
                 jsonString = urlConnection.inputStream.readTextAndClose()
@@ -51,7 +53,9 @@ class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<St
                     mTaskListener?.onTaskCompleted(jsonString, token)
                 }
             } else {
-                mTaskListener?.onTaskFailed(urlConnection.errorStream.readTextAndClose(), null)
+                val error = urlConnection.errorStream.readTextAndClose()
+                Log.d("TASK", "error $error - code $responseCode")
+                mTaskListener?.onTaskFailed(error, null, responseCode)
             }
         } catch (e: IOException) {
             mTaskListener?.onTaskFailed(e.message, e)

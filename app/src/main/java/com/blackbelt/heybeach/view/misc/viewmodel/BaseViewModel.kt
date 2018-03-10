@@ -1,10 +1,13 @@
 package com.blackbelt.heybeach.view.misc.viewmodel
 
 import android.databinding.BaseObservable
+import com.blackbelt.heybeach.view.View
 
 class ProgressLoader
 
 abstract class BaseViewModel : BaseObservable() {
+
+    var mListener: View<Any>? = null
 
     open fun onCreate() {}
 
@@ -12,5 +15,7 @@ abstract class BaseViewModel : BaseObservable() {
 
     open fun onStop() {}
 
-    open fun onDestroy() {}
+    open fun onDestroy() {
+        mListener = null
+    }
 }

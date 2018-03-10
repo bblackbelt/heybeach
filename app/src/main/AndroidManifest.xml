@@ -22,7 +22,9 @@
 
         <activity android:name=".view.user.SignUpActivity" />
 
-        <activity android:name=".view.MainActivity" />
+        <activity
+                android:label=""
+                android:name=".view.main.MainActivity" />
 
     </application>
 

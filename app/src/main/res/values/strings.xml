@@ -9,4 +9,5 @@
     <string name="oops_something_went_wrong">Oops something went wrong</string>
     <string name="invalid_email">Invalid Email</string>
     <string name="invalid_password">Password must be at least six chars</string>
+    <string name="log_out">Log out</string>
 </resources>
