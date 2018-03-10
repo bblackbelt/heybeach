@@ -50,6 +50,7 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         mMainViewModel.logOut()
         startActivity(Intent(this, IntroActivity::class.java))
+        finish()
         return super.onOptionsItemSelected(item)
     }
 }
