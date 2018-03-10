@@ -3,12 +3,13 @@ package com.blackbelt.heybeach.view.misc
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.annotation.LayoutRes
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
 
 abstract class BaseActivity : AppCompatActivity() {
 
-    var mViewModel: BaseViewModel? = null
+    private var mViewModel: BaseViewModel? = null
 
     fun setContentView(@LayoutRes layoutId: Int, brVariable: Int, viewModel: BaseViewModel) {
         mViewModel = viewModel
@@ -32,5 +33,9 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mViewModel?.onDestroy()
+    }
+
+    fun showErrorMessage(error: String) {
+        Snackbar.make(findViewById(android.R.id.content), error, Snackbar.LENGTH_LONG).show()
     }
 }

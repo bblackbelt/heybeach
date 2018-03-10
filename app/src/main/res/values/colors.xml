@@ -3,4 +3,6 @@
     <color name="colorPrimary">#222222</color>
     <color name="colorPrimaryDark">#222222</color>
     <color name="colorAccent">#181818</color>
+    <color name="white_op_50">#80FFFFFF</color>
+    <color name="input_field_underline_color">#32FFFFFF</color>
 </resources>

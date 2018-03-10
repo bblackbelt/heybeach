@@ -6,4 +6,7 @@
     <string name="choose_username">Email</string>
     <string name="enter_your_password">Password</string>
     <string name="signup_for_free">Sign up for free</string>
+    <string name="oops_something_went_wrong">Oops something went wrong</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="invalid_password">Password must be at least six chars</string>
 </resources>

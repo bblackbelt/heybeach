@@ -7,7 +7,7 @@ import java.net.URL
 import java.nio.charset.Charset
 import java.util.concurrent.Callable
 
-interface ITask<T> : Callable<T> {}
+interface ITask<T> : Callable<T>
 
 class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<String>) : ITask<String> {
 
@@ -19,16 +19,22 @@ class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<St
         var jsonString = ""
         var urlConnection: HttpURLConnection? = null
         try {
-            urlConnection = URL(mTaskDescriptor.url).openConnection() as HttpURLConnection;
+            urlConnection = URL(mTaskDescriptor.url).openConnection() as HttpURLConnection
             urlConnection.setRequestProperty("Accept", "application/json")
+            urlConnection.setRequestProperty("Content-Type", "application/json")
+            urlConnection.useCaches = false
             urlConnection.requestMethod = mTaskDescriptor.requestMethod.name
 
+            urlConnection.doInput = true
+
             if (mTaskDescriptor.requestMethod == RequestMethod.POST) {
+                urlConnection.doOutput = true
                 urlConnection.body(mTaskDescriptor.body)
             }
 
             if (urlConnection.responseCode == 200) {
                 jsonString = urlConnection.inputStream.readTextAndClose()
+
                 mTaskListener?.onTaskCompleted(jsonString)
             } else {
                 mTaskListener?.onTaskFailed(urlConnection.errorStream.readTextAndClose(), null)
@@ -44,7 +50,11 @@ class Task constructor(taskDescriptor: TaskDescriptor, listener: TaskListener<St
 
 fun HttpURLConnection.body(body: String?) {
     body ?: return
-    outputStream.bufferedWriter().use { it.write(body) }
+
+    val bodyArray = body.toByteArray(Charsets.UTF_8)
+    setRequestProperty( "Content-Length", bodyArray.size.toString())
+    outputStream.write(body.toByteArray(Charsets.UTF_8))
+    outputStream.close()
 }
 
 fun InputStream.readTextAndClose(charset: Charset = Charsets.UTF_8): String {
