@@ -1,7 +1,5 @@
 package com.blackbelt.heybeach.view.intro.viewmodel
 
-import com.blackbelt.heybeach.data.BASE_URL
-import com.blackbelt.heybeach.data.generateUrl
 import com.blackbelt.heybeach.domain.beaches.model.Beach
 
 class BeachItemViewModel(beach: Beach) {
@@ -10,8 +8,5 @@ class BeachItemViewModel(beach: Beach) {
 
     fun getName() = mBeach.name
 
-    fun getBeachUrl(): String {
-        mBeach.url ?: return ""
-        return BASE_URL.generateUrl(listOf(mBeach.url))
-    }
+    fun getBeachUrl() = mBeach.url
 }

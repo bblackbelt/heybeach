@@ -17,8 +17,8 @@ class RequestExecutor {
         fun getInstance() = INSTANCE
     }
 
-    fun executeTask(task: Task) {
-        mExecutor?.execute(task)
+    fun <T> executeTask(task: ITask<T>) {
+        mExecutor?.submit(task)
     }
 }
 
