@@ -1,6 +1,8 @@
 package com.blackbelt.heybeach.view
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.util.LruCache
 import com.blackbelt.heybeach.data.RequestExecutor
@@ -26,7 +28,11 @@ class HeyBeachApp : Application() {
     }
 
     private val mUserManager: IUserManager by lazy {
-        UserManager(RequestExecutor.getInstance(), ResponseParser)
+        UserManager(RequestExecutor.getInstance(), ResponseParser, mSharedPreferences)
+    }
+
+    private val mSharedPreferences: SharedPreferences by lazy {
+        getSharedPreferences("HEY_BEACH_SP", Context.MODE_PRIVATE)
     }
 
     private val mPictureCache: LruCache<String, Bitmap> by lazy {

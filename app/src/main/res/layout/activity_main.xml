@@ -6,7 +6,7 @@
         android:orientation="vertical"
         tools:context="com.blackbelt.heybeach.view.MainActivity">
 
-    <com.blackbelt.heybeach.widgets.AndroidBindableRecyclerView
+    <com.blackbelt.heybeach.widgets.BindableRecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Hello World!" />

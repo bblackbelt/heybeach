@@ -1,5 +1,6 @@
 package com.blackbelt.heybeach.domain.user
 
+import android.content.SharedPreferences
 import com.blackbelt.heybeach.data.RequestExecutor
 import com.blackbelt.heybeach.data.ResponseParser
 import com.blackbelt.heybeach.data.TaskFactory
@@ -12,18 +13,28 @@ import com.blackbelt.heybeach.domain.user.model.SignUpModel
 interface IUserManager {
 
     fun signUp(email: String, password: String, listener: OnDataLoadedListener<SignUpModel>?)
+
+    fun signIn(email: String, password: String, listener: OnDataLoadedListener<SignUpModel>?)
+
+    fun logout(listener: OnDataLoadedListener<Boolean>?)
+
+    fun getAuthToken() : String
 }
 
-class UserManager constructor(executor: RequestExecutor, parsingFactory: ResponseParser) : IUserManager {
+private const val X_AUTH_TOKEN_KEY = "X_AUTH_TOKEN_KEY"
+
+class UserManager constructor(executor: RequestExecutor, parsingFactory: ResponseParser, sharedPreferences: SharedPreferences) : IUserManager {
 
     private val mRequestExecutor = executor
 
     private val mParsingFactory = parsingFactory
 
+    private val mSharedPreferences = sharedPreferences
+
     override fun signUp(email: String, password: String, listener: OnDataLoadedListener<SignUpModel>?) {
-        
         mRequestExecutor.executeTask(TaskFactory.createSignUpTask(SignUpRequestModel(email, password), object : TaskListener<String> {
-            override fun onTaskCompleted(result: String) {
+            override fun onTaskCompleted(result: String, token: String?) {
+                saveAuthToken(token)
                 val responseModel = mParsingFactory.toSignupResonseModel(result)
                 listener?.onDataLoaded(SignUpModel(responseModel.id, responseModel.email))
             }
@@ -35,4 +46,43 @@ class UserManager constructor(executor: RequestExecutor, parsingFactory: Respons
         }))
     }
 
+    fun saveAuthToken(token: String?) {
+        if (token == null) {
+            mSharedPreferences.edit().remove(X_AUTH_TOKEN_KEY).apply()
+        } else {
+            mSharedPreferences.edit().putString(X_AUTH_TOKEN_KEY, token).apply()
+        }
+    }
+
+    override fun getAuthToken(): String = mSharedPreferences.getString(X_AUTH_TOKEN_KEY, "")
+
+    override fun signIn(email: String, password: String, listener: OnDataLoadedListener<SignUpModel>?) {
+        mRequestExecutor.executeTask(TaskFactory.createSignInTask(SignUpRequestModel(email, password), object : TaskListener<String> {
+            override fun onTaskCompleted(result: String, token: String?) {
+                saveAuthToken(token)
+                val responseModel = mParsingFactory.toSignupResonseModel(result)
+                listener?.onDataLoaded(SignUpModel(responseModel.id, responseModel.email))
+            }
+
+            override fun onTaskFailed(message: String?, throwable: Throwable?) {
+                val errorResponse = mParsingFactory.toErrorResponseModel(message)
+                listener?.onError(ErrorModel(errorResponse.code, errorResponse.errmsg), throwable)
+            }
+        }))
+    }
+
+    override fun logout(listener: OnDataLoadedListener<Boolean>?) {
+        val token = mSharedPreferences.getString(X_AUTH_TOKEN_KEY, "")
+        mRequestExecutor.executeTask(TaskFactory.createLogoutTask(object : TaskListener<String> {
+            override fun onTaskCompleted(result: String) {
+                saveAuthToken(null)
+                listener?.onDataLoaded(true)
+            }
+
+            override fun onTaskFailed(message: String?, throwable: Throwable?) {
+                val errorResponse = mParsingFactory.toErrorResponseModel(message)
+                listener?.onError(ErrorModel(errorResponse.code, errorResponse.errmsg), throwable)
+            }
+        }, token))
+    }
 }

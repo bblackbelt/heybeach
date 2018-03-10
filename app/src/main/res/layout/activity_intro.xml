@@ -31,17 +31,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_marginTop="@dimen/margin_16"
                 android:layout_marginEnd="@dimen/margin_16"
                 android:layout_marginStart="@dimen/margin_16">
 
-            <Button
+            <TextView
+                    android:padding="@dimen/margin_16"
                     android:id="@+id/login"
+                    android:text="@string/login"
+                    android:background="@drawable/button_intro_login_signup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/login"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_16" />
+                    android:textSize="@dimen/text_16"
+                    android:textColor="@android:color/white"
+                    android:gravity="center_horizontal" />
 
 
             <TextView

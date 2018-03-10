@@ -27,6 +27,18 @@ object TaskFactory {
         return Task(taskDescriptor, listener)
     }
 
+    fun createSignInTask(body: SignUpRequestModel, listener: TaskListener<String>): ITask<String> {
+        val url = BASE_URL.generateUrl(listOf("user", "login"))
+        val taskDescriptor = TaskDescriptor(url, RequestMethod.POST, body.toJsonString())
+        return Task(taskDescriptor, listener)
+    }
+
+    fun createLogoutTask(listener: TaskListener<String>, authToken: String): ITask<String> {
+        val url = BASE_URL.generateUrl(listOf("user", "logout"))
+        val taskDescriptor = TaskDescriptor(url, RequestMethod.DELETE)
+        return Task(taskDescriptor, listener, authToken)
+    }
+
 }
 
 fun String.generateUrl(pathSegments: List<String> = listOf(), query: Map<String, String> = mapOf()): String {

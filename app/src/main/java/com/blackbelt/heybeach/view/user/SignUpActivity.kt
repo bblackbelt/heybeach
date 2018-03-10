@@ -7,6 +7,7 @@ import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.domain.user.model.SignUpModel
 import com.blackbelt.heybeach.view.HeyBeachApp
 import com.blackbelt.heybeach.view.View
+import com.blackbelt.heybeach.view.intro.LOG_IN_KEY
 import com.blackbelt.heybeach.view.misc.BaseActivity
 import com.blackbelt.heybeach.view.user.viewmodel.SignUpViewModel
 
@@ -19,6 +20,7 @@ class SignUpActivity : BaseActivity(), View<SignUpModel> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        mSignUpViewModel.isLogin = intent.getBooleanExtra(LOG_IN_KEY, false)
         setContentView(R.layout.activity_sign_up, BR.signUpViewModel, mSignUpViewModel)
         mSignUpViewModel.mListener = this
     }

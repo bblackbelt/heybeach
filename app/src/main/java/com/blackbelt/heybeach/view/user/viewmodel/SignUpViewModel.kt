@@ -11,7 +11,7 @@ import com.blackbelt.heybeach.domain.user.model.SignUpModel
 import com.blackbelt.heybeach.view.View
 import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
 
-class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel() {
+class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel(), OnDataLoadedListener<SignUpModel> {
 
     private val mUserManager = userManager
 
@@ -28,22 +28,41 @@ class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel() {
 
     var password: String = ""
 
+    var isLogin: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.title)
+            notifyPropertyChanged(BR.buttonLabel)
+        }
+
+    @Bindable
+    fun getTitle(): Int {
+        return if (isLogin) {
+            R.string.login
+        } else {
+            R.string.sign_up_title
+        }
+    }
+
+    @Bindable
+    fun getButtonLabel(): Int {
+        return if (isLogin) {
+            R.string.login
+        } else {
+            R.string.signup_for_free
+        }
+    }
+
     fun doSignUp() {
         if (!canSignUp()) {
             return
         }
         loading = true
-        mUserManager.signUp(email, password, object : OnDataLoadedListener<SignUpModel> {
-            override fun onDataLoaded(data: SignUpModel) {
-                loading = false
-                mListener?.onDataLoaded(data)
-            }
-
-            override fun onError(message: ErrorModel?, throwable: Throwable?) {
-                mListener?.onError(message, throwable)
-                loading = false
-            }
-        })
+        if (isLogin) {
+            mUserManager.signIn(email, password, this)
+        } else {
+            mUserManager.signUp(email, password, this)
+        }
     }
 
     private fun canSignUp(): Boolean {
@@ -66,6 +85,16 @@ class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel() {
     override fun onDestroy() {
         super.onDestroy()
         mListener = null
+    }
+
+    override fun onDataLoaded(data: SignUpModel) {
+        loading = false
+        mListener?.onDataLoaded(data)
+    }
+
+    override fun onError(message: ErrorModel?, throwable: Throwable?) {
+        mListener?.onError(message, throwable)
+        loading = false
     }
 }
 

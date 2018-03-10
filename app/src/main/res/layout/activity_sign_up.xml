@@ -21,7 +21,7 @@
                 android:background="@color/colorAccent"
                 android:id="@+id/toolbar"
                 app:titleTextColor="@android:color/white"
-                app:title="@string/sign_up_title"
+                app:title="@{signUpViewModel.title}"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize" />
 
@@ -115,7 +115,7 @@
                             android:padding="@dimen/margin_16"
                             android:onClick="@{() ->  signUpViewModel.doSignUp()}"
                             android:id="@+id/signup_for_free"
-                            android:text="@string/signup_for_free"
+                            android:text="@{ signUpViewModel.buttonLabel}"
                             android:background="@drawable/button_intro_login_signup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
