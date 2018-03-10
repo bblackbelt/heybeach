@@ -21,10 +21,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize" />
 
-        <com.blackbelt.heybeach.widgets.BindableRecyclerView
+        <FrameLayout
+                android:background="@color/colorPrimary"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Hello World!" />
+                android:layout_height="match_parent">
 
+            <com.blackbelt.heybeach.widgets.BindableRecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/main_rv"
+                    pageDescriptor="@={mainViewModel.nextPage}"
+                    items="@{mainViewModel.items}"
+                    itemViewBinder="@{mainViewModel.templates}" />
+
+            <ProgressBar xmlns:tools="http://schemas.android.com/tools"
+                    toVisibility="@{mainViewModel.firstLoading}"
+                    android:id="@+id/progress_bar"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:theme="@style/CircularProgress"
+                    android:indeterminate="true"
+                    tools:ignore="MissingPrefix" />
+        </FrameLayout>
     </LinearLayout>
 </layout>
