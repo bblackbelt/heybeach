@@ -29,7 +29,7 @@ class BeachesManager constructor(executor: RequestExecutor, parsingParser: Respo
                 onDataLoadedListener?.onDataLoaded(beaches)
             }
 
-            override fun onTaskFailed(message: String?, throwable: Throwable?) {
+            override fun onTaskFailed(message: String?, throwable: Throwable?, errorCode: Int) {
                 val errorResponse = mParsingFactory.toErrorResponseModel(message)
                 onDataLoadedListener?.onError(ErrorModel(errorResponse.code, errorResponse.errmsg), throwable)
             }

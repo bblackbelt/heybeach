@@ -9,6 +9,7 @@ import com.blackbelt.heybeach.data.model.SignUpRequestModel
 import com.blackbelt.heybeach.domain.OnDataLoadedListener
 import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.domain.user.model.SignUpModel
+import com.blackbelt.heybeach.domain.user.model.UserModel
 
 interface IUserManager {
 
@@ -19,6 +20,8 @@ interface IUserManager {
     fun logout(listener: OnDataLoadedListener<Boolean>? = null)
 
     fun getAuthToken(): String
+
+    fun getUser(listener: OnDataLoadedListener<UserModel>?)
 }
 
 private const val X_AUTH_TOKEN_KEY = "X_AUTH_TOKEN_KEY"
@@ -84,5 +87,19 @@ class UserManager constructor(executor: RequestExecutor, parsingFactory: Respons
                 listener?.onError(ErrorModel(errorResponse.code ?: errorCode, errorResponse.errmsg), throwable)
             }
         }, token))
+    }
+
+    override fun getUser(listener: OnDataLoadedListener<UserModel>?) {
+        mRequestExecutor.executeTask(TaskFactory.createUserTask(object : TaskListener<String> {
+            override fun onTaskCompleted(result: String) {
+                val model = mParsingFactory.toUserResponseMode(result)
+                listener?.onDataLoaded(UserModel(model.id, model.email))
+            }
+
+            override fun onTaskFailed(message: String?, throwable: Throwable?, errorCode: Int) {
+                val errorResponse = mParsingFactory.toErrorResponseModel(message)
+                listener?.onError(ErrorModel(errorResponse.code ?: errorCode, errorResponse.errmsg), throwable)
+            }
+        }, getAuthToken()))
     }
 }
