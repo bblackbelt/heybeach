@@ -81,5 +81,4 @@ class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel(), IErrorV
             getErrorText()?.let {
                 it > 0
             } ?: false
-
 }

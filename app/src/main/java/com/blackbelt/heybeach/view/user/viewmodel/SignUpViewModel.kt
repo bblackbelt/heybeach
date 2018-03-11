@@ -1,7 +1,6 @@
 package com.blackbelt.heybeach.view.user.viewmodel
 
 import android.databinding.Bindable
-import android.util.Patterns
 import com.blackbelt.heybeach.BR
 import com.blackbelt.heybeach.R
 import com.blackbelt.heybeach.domain.OnDataLoadedListener
@@ -9,10 +8,20 @@ import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.domain.user.IUserManager
 import com.blackbelt.heybeach.domain.user.model.SignUpModel
 import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
+import java.util.regex.Pattern
 
-class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel(), OnDataLoadedListener<SignUpModel> {
+open class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel(), OnDataLoadedListener<SignUpModel> {
 
     private val mUserManager = userManager
+
+    private val mEmailPattern = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+")
 
     var loading: Boolean = false
         @Bindable get
@@ -62,26 +71,19 @@ class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel(), 
         }
     }
 
-    private fun canSignUp(): Boolean {
+    fun canSignUp(): Boolean {
 
-        val validEmail = email.isValidEmail()
-        if (!validEmail) {
+        if (!isValidEmail(email)) {
             mListener?.onError(null, null, R.string.invalid_email)
             return false
         }
 
-        val validPassword = password.isValidPassword()
-        if (!validPassword) {
+        if (!isValidPassword(password)) {
             mListener?.onError(null, null, R.string.invalid_password)
             return false
         }
 
         return true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mListener = null
     }
 
     override fun onDataLoaded(data: SignUpModel) {
@@ -93,12 +95,12 @@ class SignUpViewModel constructor(userManager: IUserManager) : BaseViewModel(), 
         mListener?.onError(message, throwable)
         loading = false
     }
-}
 
-fun String.isValidEmail(): Boolean {
-    return Patterns.EMAIL_ADDRESS.matcher(this).matches()
-}
+    fun isValidPassword(password: String): Boolean {
+        return password.length > 5
+    }
 
-fun String.isValidPassword(): Boolean {
-    return length > 5
+    fun isValidEmail(email: String): Boolean {
+        return mEmailPattern.matcher(email).matches()
+    }
 }
