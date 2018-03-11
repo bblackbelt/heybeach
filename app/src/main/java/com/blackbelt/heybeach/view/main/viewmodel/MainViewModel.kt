@@ -48,7 +48,7 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
             .setThreshold(2)
             .build()
 
-    private val mProgressLoader: ProgressLoader = ProgressLoader()
+    internal val mProgressLoader: ProgressLoader = ProgressLoader()
 
     val templates: Map<Class<*>, AndroidItemBinder> =
             hashMapOf(ProgressLoader::class.java to AndroidItemBinder(R.layout.loading_progress, BR.progressLoader),
@@ -89,7 +89,7 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
         })
     }
 
-    private fun handleLoading(loading: Boolean) {
+    internal fun handleLoading(loading: Boolean) {
         if (mPageDescriptor.getCurrentPage() == 1) {
             firstLoading = loading
         } else {
