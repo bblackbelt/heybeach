@@ -1,5 +1,6 @@
 package com.blackbelt.heybeach.view.main.viewmodel
 
+import com.blackbelt.heybeach.R
 import com.blackbelt.heybeach.data.ResponseParser
 import com.blackbelt.heybeach.domain.OnDataLoadedListener
 import com.blackbelt.heybeach.domain.beaches.IBeachesManager
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import java.io.IOException
 
 @RunWith(MockitoJUnitRunner::class)
 class MainViewModelTest {
@@ -105,7 +107,6 @@ class MainViewModelTest {
         Mockito.verify(mListener).onDataLoaded(true)
     }
 
-
     @Test
     fun test_logout_error() {
         mMainViewModel.mListener = mListener
@@ -119,5 +120,64 @@ class MainViewModelTest {
 
         mMainViewModel.logOut()
         Mockito.verify(mListener).onError(errorModel, throwable)
+    }
+
+    @Test
+    fun test_error() {
+        Mockito.doAnswer {
+            (it.arguments[1] as OnDataLoadedListener<List<Beach>>).onError(ErrorModel(), Throwable())
+        }.`when`(mBeachesManager).loadBeaches(Mockito.anyInt(), Mockito.any())
+
+        mMainViewModel.nextPage = mMainViewModel.nextPage
+        Assert.assertTrue(mMainViewModel.items.isEmpty())
+        Assert.assertTrue(mMainViewModel.error == R.string.oops_something_went_wrong)
+    }
+
+    @Test
+    fun test_error_other_pages() {
+        Mockito.doAnswer {
+            (it.arguments[1] as OnDataLoadedListener<List<Beach>>).onError(ErrorModel(), Throwable())
+        }.`when`(mBeachesManager).loadBeaches(Mockito.anyInt(), Mockito.any())
+
+        mMainViewModel.nextPage.setCurrentPage(2)
+        mMainViewModel.nextPage = mMainViewModel.nextPage
+        Assert.assertTrue(mMainViewModel.items.isEmpty())
+        Assert.assertTrue(mMainViewModel.error == null)
+    }
+
+
+    @Test
+    fun test_network_error() {
+        Mockito.doAnswer {
+            (it.arguments[1] as OnDataLoadedListener<List<Beach>>).onError(ErrorModel(), IOException())
+        }.`when`(mBeachesManager).loadBeaches(Mockito.anyInt(), Mockito.any())
+
+        mMainViewModel.nextPage = mMainViewModel.nextPage
+        Assert.assertTrue(mMainViewModel.items.isEmpty())
+        Assert.assertTrue(mMainViewModel.error == R.string.connection_error)
+    }
+
+    @Test
+    fun test_network_error_other_pages() {
+
+        Mockito.doAnswer {
+            (it.arguments[1] as OnDataLoadedListener<List<Beach>>).onError(ErrorModel(), IOException())
+        }.`when`(mBeachesManager).loadBeaches(Mockito.anyInt(), Mockito.any())
+
+        mMainViewModel.nextPage.setCurrentPage(2)
+        mMainViewModel.nextPage = mMainViewModel.nextPage
+        Assert.assertTrue(mMainViewModel.items.isEmpty())
+        Assert.assertTrue(mMainViewModel.error == null)
+    }
+
+    @Test
+    fun test_error_text_color() {
+        Assert.assertTrue(mMainViewModel.getErrorTextColor() == R.color.white_op_50)
+    }
+
+    @Test
+    fun test_reload() {
+        mMainViewModel.reload()
+        Assert.assertTrue(mMainViewModel.error == null)
     }
 }
