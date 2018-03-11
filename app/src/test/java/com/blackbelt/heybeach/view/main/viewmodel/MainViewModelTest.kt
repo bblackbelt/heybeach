@@ -67,7 +67,7 @@ class MainViewModelTest {
             (it.arguments[1] as OnDataLoadedListener<List<Beach>>).onDataLoaded(beaches)
         }.`when`(mBeachesManager).loadBeaches(Mockito.anyInt(), Mockito.any())
 
-        mMainViewModel.setNextPage(mMainViewModel.getNextPage())
+        mMainViewModel.nextPage = mMainViewModel.nextPage
         Assert.assertTrue(mMainViewModel.items.size == 6)
         Assert.assertTrue(mMainViewModel.items[0] is BeachItemViewModel)
         Assert.assertFalse(mMainViewModel.firstLoading)
@@ -76,7 +76,7 @@ class MainViewModelTest {
 
     @Test
     fun test_handle_loading_first_page() {
-        mMainViewModel.getNextPage().setCurrentPage(1)
+        mMainViewModel.nextPage.setCurrentPage(1)
         mMainViewModel.handleLoading(true)
         Assert.assertTrue(mMainViewModel.firstLoading)
         Assert.assertFalse(mMainViewModel.items.contains(mMainViewModel.mProgressLoader))
@@ -84,7 +84,7 @@ class MainViewModelTest {
 
     @Test
     fun test_handle_loading_other_pages() {
-        mMainViewModel.getNextPage().setCurrentPage(2)
+        mMainViewModel.nextPage.setCurrentPage(2)
         mMainViewModel.handleLoading(true)
         Assert.assertFalse(mMainViewModel.firstLoading)
         Assert.assertTrue(mMainViewModel.items.contains(mMainViewModel.mProgressLoader))

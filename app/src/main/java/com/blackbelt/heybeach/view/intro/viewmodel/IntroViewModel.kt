@@ -7,28 +7,18 @@ import com.blackbelt.heybeach.domain.OnDataLoadedListener
 import com.blackbelt.heybeach.domain.beaches.IBeachesManager
 import com.blackbelt.heybeach.domain.beaches.model.Beach
 import com.blackbelt.heybeach.domain.model.ErrorModel
-import com.blackbelt.heybeach.view.misc.IErrorView
 import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
 import com.blackbelt.heybeach.view.misc.viewmodel.ProgressLoader
 import com.blackbelt.heybeach.widgets.AndroidItemBinder
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
-import java.io.IOException
 
 
-class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel(), IErrorView, OnDataLoadedListener<List<Beach>> {
+class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel(), OnDataLoadedListener<List<Beach>> {
 
     private val mBeachesManager = beachesManager
 
     private val mItems = mutableListOf<BeachItemViewModel>()
-
-    var error: Int? = null
-        @Bindable get
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.errorText)
-            notifyPropertyChanged(BR.errorViewVisible)
-        }
 
     var loading: Boolean = false
         @Bindable get
@@ -60,25 +50,13 @@ class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel(), IErrorV
         }
     }
 
-    override fun onError(message: ErrorModel?, throwable: Throwable?) {
-        error = when (throwable is IOException) {
-            true -> R.string.connection_error
-            false -> R.string.oops_something_went_wrong
-        }
-        loading = false
-    }
-
-    @Bindable
-    override fun getErrorText(): Int? = error
-
     override fun reload() {
-        error = null
+        super.reload()
         onCreate()
     }
 
-    @Bindable
-    override fun isErrorViewVisible(): Boolean =
-            getErrorText()?.let {
-                it > 0
-            } ?: false
+    override fun onError(message: ErrorModel?, throwable: Throwable?) {
+        handleError(message, throwable)
+        loading = false
+    }
 }
