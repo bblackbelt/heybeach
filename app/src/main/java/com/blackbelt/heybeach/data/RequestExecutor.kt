@@ -3,22 +3,18 @@ package com.blackbelt.heybeach.data
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class RequestExecutor {
+interface IRequestExecutor {
+    fun <T> executeTask(task: ITask<T>)
+}
 
-    private var mExecutor: ExecutorService? = null
+class RequestExecutor : IRequestExecutor {
 
-    companion object {
-        private val INSTANCE: RequestExecutor by lazy {
-            val requestExecutor = RequestExecutor()
-            requestExecutor.mExecutor = Executors.newCachedThreadPool()
-            requestExecutor
-        }
-
-        fun getInstance() = INSTANCE
+    private val mExecutor: ExecutorService  by lazy {
+        Executors.newFixedThreadPool(1)
     }
 
-    fun <T> executeTask(task: ITask<T>) {
-        mExecutor?.submit(task)
+    override fun <T> executeTask(task: ITask<T>) {
+        mExecutor.submit(task)
     }
 }
 

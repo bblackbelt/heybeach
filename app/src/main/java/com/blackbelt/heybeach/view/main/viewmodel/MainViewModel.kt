@@ -48,7 +48,7 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
             .setThreshold(2)
             .build()
 
-    private val mProgressLoader: ProgressLoader = ProgressLoader()
+    internal val mProgressLoader: ProgressLoader = ProgressLoader()
 
     val templates: Map<Class<*>, AndroidItemBinder> =
             hashMapOf(ProgressLoader::class.java to AndroidItemBinder(R.layout.loading_progress, BR.progressLoader),
@@ -70,26 +70,36 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
     @Bindable
     fun getUserEmail() = mUser?.email
 
-    @Bindable
-    fun getNextPage() = mPageDescriptor
-
-    fun setNextPage(pageDescriptor: PageDescriptor) {
-        handleLoading(true)
-        mBeachManager.loadBeaches(pageDescriptor.getCurrentPage(), object : OnDataLoadedListener<List<Beach>> {
-            override fun onDataLoaded(data: List<Beach>) {
-                data.forEach { items.add(BeachItemViewModel(it)) }
-                launch(UI) {
-                    notifyPropertyChanged(BR.items)
+    var nextPage
+        @Bindable get() = mPageDescriptor
+        set(value) {
+            handleLoading(true)
+            mBeachManager.loadBeaches(value.getCurrentPage(), object : OnDataLoadedListener<List<Beach>> {
+                override fun onDataLoaded(data: List<Beach>) {
+                    data.forEach { items.add(BeachItemViewModel(it)) }
+                    launch(UI) {
+                        notifyPropertyChanged(BR.items)
+                    }
+                    handleLoading(false)
                 }
-                handleLoading(false)
-            }
 
-            override fun onError(message: ErrorModel?, throwable: Throwable?) {
-            }
-        })
+                override fun onError(message: ErrorModel?, throwable: Throwable?) {
+                    handleError(message, throwable)
+                }
+            })
+        }
+
+
+    override fun handleError(message: ErrorModel?, throwable: Throwable?) {
+        if (mPageDescriptor.getCurrentPage() == 1) {
+            super.handleError(message, throwable)
+        } else {
+            mListener?.onError(message, throwable)
+        }
+        handleLoading(false)
     }
 
-    private fun handleLoading(loading: Boolean) {
+    internal fun handleLoading(loading: Boolean) {
         if (mPageDescriptor.getCurrentPage() == 1) {
             firstLoading = loading
         } else {
@@ -117,4 +127,11 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
             }
         })
     }
+
+    override fun reload() {
+        super.reload()
+        nextPage = mPageDescriptor
+    }
+
+    override fun getErrorTextColor(): Int = R.color.white_op_50
 }

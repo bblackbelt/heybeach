@@ -14,28 +14,26 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
 
-class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel() {
+class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel(), OnDataLoadedListener<List<Beach>> {
 
     private val mBeachesManager = beachesManager
 
     private val mItems = mutableListOf<BeachItemViewModel>()
+
+    var loading: Boolean = false
+        @Bindable get
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.loading)
+        }
 
     private val mTemplates: Map<Class<*>, AndroidItemBinder> =
             hashMapOf(ProgressLoader::class.java to AndroidItemBinder(R.layout.loading_progress, BR.progressLoader),
                     BeachItemViewModel::class.java to AndroidItemBinder(R.layout.beach_item, BR.beach))
 
     override fun onCreate() {
-        mBeachesManager.loadBeaches(1, object : OnDataLoadedListener<List<Beach>> {
-            override fun onDataLoaded(data: List<Beach>) {
-                data.forEach { mItems.add(BeachItemViewModel(it)) }
-                launch(UI) {
-                    notifyPropertyChanged(BR.beaches)
-                }
-            }
-
-            override fun onError(message: ErrorModel?, throwable: Throwable?) {
-            }
-        })
+        loading = true
+        mBeachesManager.loadBeaches(1, this)
     }
 
     @Bindable
@@ -43,4 +41,22 @@ class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel() {
 
     @Bindable
     fun getBeaches(): List<Any> = mItems
+
+    override fun onDataLoaded(data: List<Beach>) {
+        data.forEach { mItems.add(BeachItemViewModel(it)) }
+        launch(UI) {
+            notifyPropertyChanged(BR.beaches)
+            loading = false
+        }
+    }
+
+    override fun reload() {
+        super.reload()
+        onCreate()
+    }
+
+    override fun onError(message: ErrorModel?, throwable: Throwable?) {
+        handleError(message, throwable)
+        loading = false
+    }
 }
