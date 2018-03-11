@@ -94,7 +94,7 @@ fun ImageView.loadInto(imagePath: String) {
             })
 }
 
-fun Bitmap.compressAndClose(file: File, compressFormat: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG, quality: Int = 100) {
+fun Bitmap.compressAndClose(file: File, compressFormat: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG, quality: Int = 100) {
     val outputStream = FileOutputStream(file)
     outputStream.use {
         compress(compressFormat, quality, it)

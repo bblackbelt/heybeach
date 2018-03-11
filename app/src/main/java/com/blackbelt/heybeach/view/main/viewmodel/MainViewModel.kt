@@ -26,6 +26,9 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
     val items = mutableListOf<Any>()
         @Bindable get
 
+    var itemsViewModel = mutableListOf<BeachItemViewModel>()
+        @Bindable get
+
     var firstLoading: Boolean = false
         @Bindable get
         set(value) {
@@ -76,11 +79,16 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
             handleLoading(true)
             mBeachManager.loadBeaches(value.getCurrentPage(), object : OnDataLoadedListener<List<Beach>> {
                 override fun onDataLoaded(data: List<Beach>) {
-                    data.forEach { items.add(BeachItemViewModel(it)) }
-                    launch(UI) {
-                        notifyPropertyChanged(BR.items)
+                    itemsViewModel = mutableListOf()
+                    data.forEach {
+                        items.add(BeachItemViewModel(it))
+                        itemsViewModel.add(BeachItemViewModel(it))
                     }
-                    handleLoading(false)
+                    launch(UI) {
+                        handleLoading(false)
+                        notifyPropertyChanged(BR.items)
+                        notifyPropertyChanged(BR.itemsViewModel)
+                    }
                 }
 
                 override fun onError(message: ErrorModel?, throwable: Throwable?) {

@@ -1,19 +1,16 @@
 package com.blackbelt.heybeach.view.main
 
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.blackbelt.heybeach.BR
 import com.blackbelt.heybeach.R
 import com.blackbelt.heybeach.view.HeyBeachApp
 import com.blackbelt.heybeach.view.intro.IntroActivity
 import com.blackbelt.heybeach.view.main.viewmodel.MainViewModel
 import com.blackbelt.heybeach.view.misc.BaseActivity
+import com.blackbelt.heybeach.widgets.BeachesGridLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -26,20 +23,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main, BR.mainViewModel, mMainViewModel)
         setSupportActionBar(toolbar)
-        main_rv.layoutManager = LinearLayoutManager(this)
-
-        val margin: Int = resources.getDimension(R.dimen.margin_16).toInt()
-
-        main_rv.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
-                outRect?.bottom = margin
-                if (parent?.layoutManager?.getPosition(view) == 0) {
-                    outRect?.top = margin
-                }
-                outRect?.left = margin
-                outRect?.right = margin
-            }
-        })
+        main_rv.layoutManager = BeachesGridLayoutManager(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

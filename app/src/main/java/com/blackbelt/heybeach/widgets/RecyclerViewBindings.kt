@@ -4,6 +4,7 @@ import android.databinding.BindingAdapter
 import android.databinding.InverseBindingAdapter
 import android.databinding.InverseBindingListener
 import android.support.v7.widget.RecyclerView
+import com.blackbelt.heybeach.view.misc.model.ImageInfo
 
 private const val KEY_ITEMS = -1024
 
@@ -55,4 +56,9 @@ fun setPageDescriptor(recyclerView: BindableRecyclerView, pageDescriptor: PageDe
 @InverseBindingAdapter(attribute = "pageDescriptor")
 fun getPageDescriptor(recyclerView: BindableRecyclerView): PageDescriptor? {
     return recyclerView.pageDescriptor
+}
+
+@BindingAdapter("GLMItems")
+fun updateGLMDataSet(recyclerView: RecyclerView, imageList: List<ImageInfo>) {
+    (recyclerView.layoutManager as? BeachesGridLayoutManager)?.setDataSet(imageList)
 }

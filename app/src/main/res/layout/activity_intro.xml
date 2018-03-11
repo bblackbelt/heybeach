@@ -13,7 +13,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
         <RelativeLayout
                 android:layout_above="@+id/register_account_container"
@@ -23,6 +23,7 @@
             <com.blackbelt.heybeach.widgets.BindableRecyclerView
                     android:layout_width="match_parent"
                     android:id="@+id/rv"
+                    GLMItems="@{introViewModel.beaches}"
                     items="@{introViewModel.beaches}"
                     itemViewBinder="@{introViewModel.templates}"
                     android:layout_height="wrap_content" />

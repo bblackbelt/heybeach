@@ -63,8 +63,9 @@ class BindableRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerVie
                 if (mVisiblePosition == null) {
                     mVisiblePosition = IntArray(layoutManager.spanCount)
                 }
-                return layoutManager
-                        .findLastVisibleItemPositions(mVisiblePosition)[0]
+                layoutManager
+                        .findLastVisibleItemPositions(mVisiblePosition)
+                return mVisiblePosition?.max()!!
             }
             return 0
         }

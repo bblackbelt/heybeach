@@ -40,7 +40,7 @@ class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel(), OnDataL
     fun getTemplates(): Map<Class<*>, AndroidItemBinder> = mTemplates
 
     @Bindable
-    fun getBeaches(): List<Any> = mItems
+    fun getBeaches(): List<BeachItemViewModel> = mItems
 
     override fun onDataLoaded(data: List<Beach>) {
         data.forEach { mItems.add(BeachItemViewModel(it)) }

@@ -15,7 +15,7 @@ fun setVisibility(view: View, visible: Boolean) {
 @BindingAdapter("toTextColor")
 fun TextView.setTextColorChecked(@ColorRes color: Int) {
     if (color > 0) {
-       setTextColor(ContextCompat.getColor(context, color))
+        setTextColor(ContextCompat.getColor(context, color))
     }
 }
 
@@ -24,4 +24,11 @@ fun TextView.setTextChecked(@StringRes stringRes: Int) {
     if (stringRes > 0) {
         setText(stringRes)
     }
+}
+
+@BindingAdapter("width", "height")
+fun updateImageSize(view: View, w: Int, h: Int) {
+    view.layoutParams ?: return
+    view.layoutParams.width = w
+    view.layoutParams.height = h
 }
