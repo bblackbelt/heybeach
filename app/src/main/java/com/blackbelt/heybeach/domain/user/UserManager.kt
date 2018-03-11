@@ -1,8 +1,8 @@
 package com.blackbelt.heybeach.domain.user
 
 import android.content.SharedPreferences
-import com.blackbelt.heybeach.data.RequestExecutor
-import com.blackbelt.heybeach.data.ResponseParser
+import com.blackbelt.heybeach.data.IRequestExecutor
+import com.blackbelt.heybeach.data.IResponseParser
 import com.blackbelt.heybeach.data.TaskFactory
 import com.blackbelt.heybeach.data.TaskListener
 import com.blackbelt.heybeach.data.model.SignUpRequestModel
@@ -26,7 +26,7 @@ interface IUserManager {
 
 private const val X_AUTH_TOKEN_KEY = "X_AUTH_TOKEN_KEY"
 
-class UserManager constructor(executor: RequestExecutor, parsingFactory: ResponseParser, sharedPreferences: SharedPreferences) : IUserManager {
+class UserManager constructor(executor: IRequestExecutor, parsingFactory: IResponseParser, sharedPreferences: SharedPreferences) : IUserManager {
 
     private val mRequestExecutor = executor
 

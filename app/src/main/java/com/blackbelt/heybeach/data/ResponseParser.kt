@@ -7,9 +7,16 @@ import com.blackbelt.heybeach.data.model.UserResponseModel
 import org.json.JSONArray
 import org.json.JSONObject
 
-object ResponseParser {
+interface IResponseParser {
+    fun toUserResponseMode(jsonString: String?): UserResponseModel
+    fun toSignupResonseModel(jsonString: String): SignUpResponseModel
+    fun toBeachList(beachesJsonResponse: String): List<BeachResponse>
+    fun toErrorResponseModel(jsonString: String?): ErrorResponse
+}
 
-    fun toBeachList(beachesJsonResponse: String): List<BeachResponse> {
+class ResponseParser : IResponseParser {
+
+    override fun toBeachList(beachesJsonResponse: String): List<BeachResponse> {
         val beaches = mutableListOf<BeachResponse>()
         try {
             val beachesArray = JSONArray(beachesJsonResponse)
@@ -25,7 +32,7 @@ object ResponseParser {
         return beaches
     }
 
-    fun toSignupResonseModel(jsonString: String): SignUpResponseModel {
+    override fun toSignupResonseModel(jsonString: String): SignUpResponseModel {
         try {
             val obj = JSONObject(jsonString)
             val email = obj.optString("email")
@@ -38,7 +45,7 @@ object ResponseParser {
         return SignUpResponseModel()
     }
 
-    fun toUserResponseMode(jsonString: String?): UserResponseModel {
+    override fun toUserResponseMode(jsonString: String?): UserResponseModel {
         try {
             val obj = JSONObject(jsonString)
             val email = obj.optString("email")
@@ -51,7 +58,7 @@ object ResponseParser {
         return UserResponseModel()
     }
 
-    fun toErrorResponseModel(jsonString: String?): ErrorResponse {
+    override fun toErrorResponseModel(jsonString: String?): ErrorResponse {
         try {
             val obj = JSONObject(jsonString)
             val code = obj.optInt("code")

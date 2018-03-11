@@ -24,11 +24,11 @@ class HeyBeachApp : Application() {
     }
 
     private val mBeachesManager: IBeachesManager by lazy {
-        BeachesManager(RequestExecutor.getInstance(), ResponseParser)
+        BeachesManager(RequestExecutor(), ResponseParser())
     }
 
     private val mUserManager: IUserManager by lazy {
-        UserManager(RequestExecutor.getInstance(), ResponseParser, mSharedPreferences)
+        UserManager(RequestExecutor(), ResponseParser(), mSharedPreferences)
     }
 
     private val mSharedPreferences: SharedPreferences by lazy {

@@ -10,4 +10,6 @@
     <string name="invalid_email">Invalid Email</string>
     <string name="invalid_password">Password must be at least six chars</string>
     <string name="log_out">Log out</string>
+    <string name="connection_error">Please check your connection</string>
+    <string name="reload">Reload</string>
 </resources>

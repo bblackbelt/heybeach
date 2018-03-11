@@ -1,7 +1,7 @@
 package com.blackbelt.heybeach.domain.beaches
 
-import com.blackbelt.heybeach.data.RequestExecutor
-import com.blackbelt.heybeach.data.ResponseParser
+import com.blackbelt.heybeach.data.IRequestExecutor
+import com.blackbelt.heybeach.data.IResponseParser
 import com.blackbelt.heybeach.data.TaskFactory
 import com.blackbelt.heybeach.data.TaskListener
 import com.blackbelt.heybeach.domain.OnDataLoadedListener
@@ -12,7 +12,7 @@ interface IBeachesManager {
     fun loadBeaches(page: Int = 1, onDataLoadedListener: OnDataLoadedListener<List<Beach>>?)
 }
 
-class BeachesManager constructor(executor: RequestExecutor, parsingParser: ResponseParser) : IBeachesManager {
+class BeachesManager constructor(executor: IRequestExecutor, parsingParser: IResponseParser) : IBeachesManager {
 
     private val mRequestExecutor = executor
 
