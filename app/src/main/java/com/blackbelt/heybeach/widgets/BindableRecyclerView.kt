@@ -16,12 +16,14 @@ class BindableRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerVie
 
     var pageDescriptor: PageDescriptor? = null
         set(pageDescriptor) {
-            if (mPageScrollListener != null) {
-                removeOnScrollListener(mPageScrollListener)
+            mPageScrollListener?.let {
+                removeOnScrollListener(it)
             }
             field = pageDescriptor
             mPageScrollListener = PageScrollListener(field)
-            addOnScrollListener(mPageScrollListener)
+            mPageScrollListener?.let {
+                addOnScrollListener(it)
+            }
         }
 
     private var mOnPageChangeListener: OnPageChangeListener? = null
@@ -41,7 +43,7 @@ class BindableRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerVie
             mPage = mPageDescriptor?.getStartPage() ?: 1
         }
 
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             val pageDescriptor: PageDescriptor = mPageDescriptor ?: return
             val layoutManager: LayoutManager = recyclerView?.layoutManager ?: return
             val totalItemCount = layoutManager.itemCount

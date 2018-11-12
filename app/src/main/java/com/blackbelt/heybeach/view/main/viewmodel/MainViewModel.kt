@@ -14,8 +14,9 @@ import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
 import com.blackbelt.heybeach.view.misc.viewmodel.ProgressLoader
 import com.blackbelt.heybeach.widgets.AndroidItemBinder
 import com.blackbelt.heybeach.widgets.PageDescriptor
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeachesManager) : BaseViewModel() {
 
@@ -84,7 +85,7 @@ class MainViewModel constructor(userManager: IUserManager, beachesManager: IBeac
                         items.add(BeachItemViewModel(it))
                         itemsViewModel.add(BeachItemViewModel(it))
                     }
-                    launch(UI) {
+                    GlobalScope.launch(Dispatchers.Main) {
                         handleLoading(false)
                         notifyPropertyChanged(BR.items)
                         notifyPropertyChanged(BR.itemsViewModel)

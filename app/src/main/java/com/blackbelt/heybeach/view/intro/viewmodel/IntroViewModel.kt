@@ -10,8 +10,9 @@ import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.view.misc.viewmodel.BaseViewModel
 import com.blackbelt.heybeach.view.misc.viewmodel.ProgressLoader
 import com.blackbelt.heybeach.widgets.AndroidItemBinder
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel(), OnDataLoadedListener<List<Beach>> {
@@ -44,7 +45,7 @@ class IntroViewModel(beachesManager: IBeachesManager) : BaseViewModel(), OnDataL
 
     override fun onDataLoaded(data: List<Beach>) {
         data.forEach { mItems.add(BeachItemViewModel(it)) }
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             notifyPropertyChanged(BR.beaches)
             loading = false
         }

@@ -9,10 +9,10 @@ import com.blackbelt.heybeach.data.TaskFactory
 import com.blackbelt.heybeach.domain.OnDataLoadedListener
 import com.blackbelt.heybeach.domain.model.ErrorModel
 import com.blackbelt.heybeach.view.HeyBeachApp
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -55,19 +55,20 @@ class PictureManager constructor(cache: LruCache<String, Bitmap>, diskCacheRoot:
 
         val diskBitmapFile = File(mDiskCacheRoot, key)
         if (diskBitmapFile.exists()) {
-            launch(UI) {
-                val downloadedBitmap = async(CommonPool) {
+            GlobalScope.launch(Dispatchers.Main) {
+                val downloadedBitmap = GlobalScope.async(Dispatchers.IO) {
                     val inputStream = FileInputStream(diskBitmapFile)
                     inputStream.use { BitmapFactory.decodeStream(it) }
                 }.await()
-                addBitmapToMemoryCache(key, downloadedBitmap)
                 onDataLoadedListener?.onDataLoaded(downloadedBitmap)
+                addBitmapToMemoryCache(key, downloadedBitmap)
             }
+
             return
         }
 
-        launch(UI) {
-            val downloadedBitmap = async(CommonPool) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val downloadedBitmap = async(Dispatchers.IO) {
                 val bitmap = TaskFactory.createBitmapTask(path).call()
                 try {
                     bitmap.compressAndClose(diskBitmapFile)
@@ -75,8 +76,8 @@ class PictureManager constructor(cache: LruCache<String, Bitmap>, diskCacheRoot:
                 }
                 bitmap
             }.await() ?: return@launch
-            addBitmapToMemoryCache(key, downloadedBitmap)
             onDataLoadedListener?.onDataLoaded(downloadedBitmap)
+            addBitmapToMemoryCache(key, downloadedBitmap)
         }
     }
 }

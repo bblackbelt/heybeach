@@ -9,10 +9,10 @@ import android.support.v7.util.DiffUtil.calculateDiff
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -37,8 +37,8 @@ class BindableRecyclerViewAdapter internal constructor(private val mItemBinder: 
 
     fun setDataSet(items: List<*>?) {
         val oldItems = ArrayList(dataSet)
-        launch(UI) {
-            val resultPair = async(CommonPool) {
+        GlobalScope.launch(Dispatchers.Main){
+            val resultPair = GlobalScope.async(Dispatchers.IO) {
                 Pair<List<*>?, DiffUtil.DiffResult>(items,
                         calculateDiff(ItemSourceDiffCallback(oldItems, items)))
             }.await()

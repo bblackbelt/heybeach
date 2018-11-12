@@ -11,7 +11,7 @@ private const val KEY_ITEMS = -1024
 @BindingAdapter("itemViewBinder")
 fun setItemViewBinder(recyclerView: RecyclerView, itemViewMapper: Map<Class<*>, AndroidItemBinder>) {
 
-    val items = recyclerView.getTag(KEY_ITEMS) as? List<*>?
+    val items = recyclerView.getTag(KEY_ITEMS) as? List<Any>?
 
     if (recyclerView.adapter is BindableRecyclerViewAdapter) {
         (recyclerView.adapter as BindableRecyclerViewAdapter).setDataSet(items)
@@ -39,7 +39,7 @@ fun setListener(recyclerView: BindableRecyclerView, listener: InverseBindingList
 }
 
 @BindingAdapter("items")
-fun setItems(recyclerView: RecyclerView, items: List<*>) {
+fun setItems(recyclerView: RecyclerView, items: List<Any>) {
     recyclerView.setTag(KEY_ITEMS, items)
     if (recyclerView.adapter is BindableRecyclerViewAdapter) {
         (recyclerView.adapter as BindableRecyclerViewAdapter).setDataSet(items)
